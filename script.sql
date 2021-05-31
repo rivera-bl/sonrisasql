@@ -31,7 +31,7 @@ ALTER TABLE ficha_economica ADD CONSTRAINT ficha_economica_pk PRIMARY KEY ( id )
 
 CREATE TABLE hora (
     id           INTEGER NOT NULL,
-    fecha        DATE NOT NULL,
+    fecha        VARCHAR2(50) NOT NULL,
     estado       VARCHAR2(50) NOT NULL,
     persona_id   INTEGER NOT NULL,
     servicio_id  INTEGER NOT NULL
@@ -262,7 +262,7 @@ END;
 
 
 CREATE OR REPLACE PROCEDURE insertar_hora (
-    fecha               DATE,
+    fecha               VARCHAR2,
     estado              VARCHAR2,
     persona_id          INTEGER,
     servicio_id         INTEGER,
@@ -280,7 +280,7 @@ BEGIN
         servicio_id
     ) VALUES (
         newId,
-        to_date(fecha, 'yyyy/mm/dd'),
+        fecha,
         estado,
         persona_id,
         servicio_id
@@ -317,8 +317,8 @@ INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 2);
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 3);
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 4);
 
-INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Diagnóstico Inicial')
-INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Consulta Urgencia Dental')
+INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Diagnóstico Inicial');
+INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Consulta Urgencia Dental');
 
 create or replace PROCEDURE modificar_persona (
     old_id                  NUMBER,
