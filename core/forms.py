@@ -5,26 +5,29 @@ from django.contrib.auth.models import User
 import datetime
 
 class HoraForm(forms.ModelForm):
+    persona = forms.ModelChoiceField(queryset=Persona.objects.all(),
+                                    to_field_name = 'id',
+                                    empty_label="Seleccionar persona")
     class Meta:
         model = Hora
-        # fields = ["id", "fecha", "estado", "persona"]
         fields = '__all__'
-
-        # MONTHS = {
-        #     6:('junio'), 7:('julio'), 8:('agosto'),
-        #     9:('septiembre'), 10:('octubre'), 11:('noviembre'), 12:('diciembre')
-        # }
+        exclude = ("estado", "id")
 
         widgets = {
             "fecha": forms.SelectDateWidget(
                 years=range(datetime.date.today().year, datetime.date.today().year+2),
                 attrs=({'style': 'width: 33%; display: inline-block;'}),
-                # months=MONTHS
-                # days=range(datetime.date.today().day, datetime.date.today().day+2)
                 )
         }
 
+class IngresoForm(forms.ModelForm):
+    contraseña=forms.CharField(widget=forms.PasswordInput())
+    class Meta:
+        model = Persona
+        fields = ['rut', 'contraseña']
+
 class RegistroForm(forms.ModelForm):
+    contraseña=forms.CharField(widget=forms.PasswordInput())
     class Meta:
         model = Persona
         # fields = '__all__'

@@ -24,13 +24,13 @@
           <li class="nav-item">
               <a href="{% url 'about' %}" class="nav-link">Conócenos</a>
           </li>
-          <li class="nav-item">
-              <a href="{% url 'agenda' %}" class="nav-link">Agenda</a>
-          </li>
           <!-- <li class="nav-item"> -->
           <!--     <a href="{% url 'contacto' %}" class="nav-link">Contacto</a> -->
           <!-- </li> -->
           {% if user.is_authenticated %}
+          <li class="nav-item">
+              <a href="{% url 'agenda' %}" class="nav-link">Agenda</a>
+          </li>
             <li class="nav-item">
                 <a href="{% url 'logout' %}" class="nav-link">Cerrar Sesión</a>
             </li>

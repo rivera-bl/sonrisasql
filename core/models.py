@@ -40,7 +40,7 @@ class FichaEconomica(models.Model):
 
 
 class Hora(models.Model):
-    id = models.BigIntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     fecha = models.DateField()
     estado = models.CharField(max_length=50)
     persona = models.ForeignKey('Persona', models.DO_NOTHING)
@@ -83,6 +83,8 @@ class OrdenPedidoProducto(models.Model):
 
 
 class Persona(models.Model):
+    def __str__(self):
+        return '%s' % self.rut + ' ' + self.nombre + ' ' + self.apellido_paterno
     id = models.AutoField(primary_key=True)
     rut = models.CharField(unique=True, max_length=20)
     contraseña = models.CharField(max_length=20)

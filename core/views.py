@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from .forms import HoraForm, RegistroForm
-# from .forms import HoraForm, CustomUserCreationForm
+from .forms import HoraForm, RegistroForm, IngresoForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 import cx_Oracle
+
+dsn_tns = cx_Oracle.makedsn('localhost', '1521', service_name='xe')
 
 def home(request):
     return render(request, 'core/home.html')
@@ -14,7 +15,7 @@ def contacto(request):
 
 def agenda(request):
     data = {
-            'form': HoraForm(initial={'id': request.user.id})
+            'form': HoraForm(initial={'estado': request.user.id})
     }
 
     if request.method == 'POST':
@@ -30,9 +31,39 @@ def agenda(request):
 def about(request):
     return render(request, 'core/about.html')
 
+def ingreso(request):
+    data = {
+        'form': IngresoForm()
+    }
+    con = cx_Oracle.connect(user=r'portafolio', password='portafolio', dsn=dsn_tns)
+
+    if request.method == 'POST':
+        cursor = con.cursor()
+        cursor.execute('select * from persona where rut = :rut and contraseña = :contraseña', (request.POST.get("rut"), request.POST.get("contraseña")))
+        resultadoPersona = cursor.fetchone()
+        if resultadoPersona is not None:
+            cursor1 = con.cursor()
+            cursor1.execute('select * from auth_user where username = :rut', { 'rut': request.POST.get("rut") })
+            resultadoAuth = cursor1.fetchone()
+            user = None
+            if resultadoAuth is None:
+                user = User.objects.create_user(
+                    request.POST.get("rut"),
+                    resultadoPersona[8],
+                    request.POST.get("contraseña"))
+            else:
+                user = authenticate(username=request.POST.get("rut"), password=request.POST.get("contraseña"))
+            login(request, user)
+            messages.success(request, "Registro Exitoso")
+            return redirect(to="home")
+            con.close()
+        else:
+            print('No registrado')
+    return render(request, 'registration/ingreso.html', data)
+
 def registro(request):
     data = {
-            'form': RegistroForm()
+        'form': RegistroForm()
     }
 
     if request.method == 'POST':
@@ -57,7 +88,6 @@ def registro(request):
                 request.POST.get("correo_electronico"),
                 newId])
             cursor.callproc('agregar_permiso_usuario', [newId, "cliente"])
-
             conn.commit()
 
             userid = request.POST.get("rut", '')
