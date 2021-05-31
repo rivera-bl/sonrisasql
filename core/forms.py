@@ -1,6 +1,5 @@
 from django import forms
-from .models import Hora, Persona
-from django.contrib.auth.forms import UserCreationForm
+from .models import Hora, Persona, Servicio
 from django.contrib.auth.models import User
 import datetime
 
@@ -8,6 +7,10 @@ class HoraForm(forms.ModelForm):
     persona = forms.ModelChoiceField(queryset=Persona.objects.all(),
                                     to_field_name = 'id',
                                     empty_label="Seleccionar persona")
+
+    servicio = forms.ModelChoiceField(queryset=Servicio.objects.all(),
+                                    to_field_name = 'id',
+                                    empty_label="Seleccionar Servicio")
     class Meta:
         model = Hora
         fields = '__all__'
@@ -30,8 +33,4 @@ class RegistroForm(forms.ModelForm):
     contraseña=forms.CharField(widget=forms.PasswordInput())
     class Meta:
         model = Persona
-        # fields = '__all__'
         exclude = ("estado",)
-
-# class CustomUserCreationForm(UserCreationForm):
-#     pass

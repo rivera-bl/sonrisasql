@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from .forms import HoraForm, RegistroForm, IngresoForm
-from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 import cx_Oracle
@@ -15,7 +14,8 @@ def contacto(request):
 
 def agenda(request):
     data = {
-            'form': HoraForm(initial={'estado': request.user.id})
+            'form': HoraForm()
+            # 'form': HoraForm(initial={'estado': request.user.id})
     }
 
     if request.method == 'POST':
@@ -98,7 +98,6 @@ def registro(request):
                     usermail,
                     userpass)
             login(request, user)
-            messages.success(request, "Registro Exitoso")
             return redirect(to="home")
         data["form"] = formulario
 

@@ -44,20 +44,11 @@ class Hora(models.Model):
     fecha = models.DateField()
     estado = models.CharField(max_length=50)
     persona = models.ForeignKey('Persona', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'hora'
-
-
-class HoraServicio(models.Model):
-    hora = models.OneToOneField(Hora, models.DO_NOTHING, primary_key=True)
     servicio = models.ForeignKey('Servicio', models.DO_NOTHING)
 
     class Meta:
         managed = False
-        db_table = 'hora_servicio'
-        unique_together = (('hora', 'servicio'),)
+        db_table = 'hora'
 
 
 class OrdenPedido(models.Model):
@@ -84,7 +75,7 @@ class OrdenPedidoProducto(models.Model):
 
 class Persona(models.Model):
     def __str__(self):
-        return '%s' % self.rut + ' ' + self.nombre + ' ' + self.apellido_paterno
+        return '%s' % self.id
     id = models.AutoField(primary_key=True)
     rut = models.CharField(unique=True, max_length=20)
     contraseña = models.CharField(max_length=20)
@@ -166,6 +157,8 @@ class RecepcionProducto(models.Model):
 
 
 class Servicio(models.Model):
+    def __str__(self):
+        return '%s' % self.nombre
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=150)
 
