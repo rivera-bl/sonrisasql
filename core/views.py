@@ -14,18 +14,32 @@ def contacto(request):
 
 def agenda(request):
     data = {
-            'form': HoraForm()
-            # 'form': HoraForm(initial={'estado': request.user.id})
+            # 'form': HoraForm()
+            # toma el id del usuario en la tabla auth_user, no el de persona
+            'form': HoraForm(initial={'persona': request.user.id})
+            # ? select p.id from persona p JOIN auth_user a ON p.rut = a.username;
     }
 
     if request.method == 'POST':
         formulario = HoraForm(data=request.POST)
         if formulario.is_valid():
-            formulario.save()
-            data["mensaje"] = "Hora Agendada"
-        else:
-            data["form"] = formulario
+            conn = cx_Oracle.connect(
+                    user=r'portafolio', 
+                    password='portafolio', 
+                    dsn=dsn_tns)
+            cursor = conn.cursor()
+            newId = cursor.var(int)
 
+            # me tira error ORA-01861: literal does not match format string
+            cursor.callproc('insertar_hora', [
+                request.POST.get("fecha"),
+                "1",
+                request.user.id,
+                1,
+                newId])
+            conn.commit()
+            return redirect(to="home")
+        data["form"] = formulario
     return render(request, 'core/agenda.html', data)
 
 def about(request):
@@ -69,7 +83,6 @@ def registro(request):
     if request.method == 'POST':
         formulario = RegistroForm(data=request.POST)
         if formulario.is_valid():
-            dsn_tns = cx_Oracle.makedsn('localhost', '1521', service_name='xe')
             conn = cx_Oracle.connect(
                     user=r'portafolio', 
                     password='portafolio', 

@@ -16,12 +16,12 @@ class HoraForm(forms.ModelForm):
         fields = '__all__'
         exclude = ("estado", "id")
 
-        widgets = {
-            "fecha": forms.SelectDateWidget(
-                years=range(datetime.date.today().year, datetime.date.today().year+2),
-                attrs=({'style': 'width: 33%; display: inline-block;'}),
-                )
-        }
+        # widgets = {
+        #     "fecha": forms.SelectDateWidget(
+        #         years=range(datetime.date.today().year, datetime.date.today().year+2),
+        #         attrs=({'style': 'width: 33%; display: inline-block;'}),
+        #         )
+        # }
 
 class IngresoForm(forms.ModelForm):
     contraseña=forms.CharField(widget=forms.PasswordInput())
