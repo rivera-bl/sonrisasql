@@ -289,6 +289,9 @@ INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 2);
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 3);
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 4);
 
+INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Diagnóstico Inicial')
+INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Consulta Urgencia Dental')
+
 create or replace PROCEDURE modificar_persona (
     old_id                  NUMBER,
     new_rut                 VARCHAR2,
