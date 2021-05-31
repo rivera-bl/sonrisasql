@@ -14,7 +14,7 @@ def contacto(request):
 
 def agenda(request):
     data = {
-            'form': HoraForm()
+            'form': HoraForm(initial={'id': request.user.id})
     }
 
     if request.method == 'POST':
