@@ -260,6 +260,34 @@ BEGIN
 END;
 /
 
+
+CREATE OR REPLACE PROCEDURE insertar_hora (
+    fecha               DATE,
+    estado              VARCHAR2,
+    persona_id          INTEGER,
+    servicio_id         INTEGER,
+    newId out number
+)
+IS
+BEGIN
+    newId := seq_hora.NEXTVAL;
+    
+    INSERT INTO hora (
+        id,
+        fecha,
+        estado,
+        persona_id,
+        servicio_id
+    ) VALUES (
+        newId,
+        to_date(fecha, 'yyyy/mm/dd'),
+        estado,
+        persona_id,
+        servicio_id
+    );
+END;
+/
+
 CREATE OR REPLACE PROCEDURE agregar_permiso_usuario (
     id_persona NUMBER,
     tipo_usuario VARCHAR2
