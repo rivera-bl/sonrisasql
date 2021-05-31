@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-# from .forms import HoraForm, RegistroForm
-from .forms import HoraForm, CustomUserCreationForm
+from .forms import HoraForm, RegistroForm
+# from .forms import HoraForm, CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 
 def home(request):
     return render(request, 'core/home.html')
@@ -30,7 +31,7 @@ def about(request):
 
 def registro(request):
     data = {
-            'form': CustomUserCreationForm()
+            'form': RegistroForm()
     }
 
     # if request.method == 'POST':
@@ -46,12 +47,19 @@ def registro(request):
     #     data["form"] = formulario
 
     if request.method == 'POST':
-        formulario = CustomUserCreationForm(data=request.POST)
+        formulario = RegistroForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
-            user = authenticate(
-                    username=formulario.cleaned_data["username"],
-                    password=formulario.cleaned_data["password1"])
+            userid = request.POST.get("rut", '')
+            usermail = request.POST.get("correo_electronico", '')
+            userpass = request.POST.get("contraseña", '')
+            user = User.objects.create_user(
+                    userid,
+                    usermail,
+                    userpass)
+            # user = authenticate(
+            #         username=formulario.cleaned_data["username"],
+            #         password=formulario.cleaned_data["password1"])
             login(request, user)
             messages.success(request, "Registro Exitoso")
             return redirect(to="home")

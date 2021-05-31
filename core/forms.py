@@ -24,10 +24,10 @@ class HoraForm(forms.ModelForm):
                 )
         }
 
-# class RegistroForm(forms.ModelForm):
-#     class Meta:
-#         model = Persona
-#         fields = '__all__'
+class RegistroForm(forms.ModelForm):
+    class Meta:
+        model = Persona
+        fields = '__all__'
 
-class CustomUserCreationForm(UserCreationForm):
-    pass
+# class CustomUserCreationForm(UserCreationForm):
+#     pass
