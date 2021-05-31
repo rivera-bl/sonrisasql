@@ -4,6 +4,7 @@ from .forms import HoraForm, RegistroForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+import cx_Oracle
 
 def home(request):
     return render(request, 'core/home.html')
@@ -13,7 +14,7 @@ def contacto(request):
 
 def agenda(request):
     data = {
-        'form': HoraForm()
+            'form': HoraForm()
     }
 
     if request.method == 'POST':
@@ -34,22 +35,31 @@ def registro(request):
             'form': RegistroForm()
     }
 
-    # if request.method == 'POST':
-    #     formulario = RegistroForm(data=request.POST)
-    #     if formulario.is_valid():
-    #         formulario.save()
-    #         user = authenticate (
-    #                 username=formulario.cleaned_data["rut"],
-    #                 password=formulario.cleaned_data["contraseña"])
-    #         login(request, user)
-    #         messages.success(request, "Registro Exitoso")
-    #         return redirect(to="home")
-    #     data["form"] = formulario
-
     if request.method == 'POST':
         formulario = RegistroForm(data=request.POST)
         if formulario.is_valid():
-            formulario.save()
+            dsn_tns = cx_Oracle.makedsn('localhost', '1521', service_name='xe')
+            conn = cx_Oracle.connect(
+                    user=r'portafolio', 
+                    password='portafolio', 
+                    dsn=dsn_tns)
+            cursor = conn.cursor()
+            newId = cursor.var(int)
+
+            cursor.callproc('insertar_persona', [
+                request.POST.get("rut"),
+                request.POST.get("contraseña"),
+                request.POST.get("nombre"),
+                request.POST.get("apellido_paterno"),
+                request.POST.get("apellido_materno"),
+                request.POST.get("fecha_nacimiento"),
+                request.POST.get("telefono"),
+                request.POST.get("correo_electronico"),
+                newId])
+            cursor.callproc('agregar_permiso_usuario', [newId, "cliente"])
+
+            conn.commit()
+
             userid = request.POST.get("rut", '')
             usermail = request.POST.get("correo_electronico", '')
             userpass = request.POST.get("contraseña", '')
@@ -57,9 +67,6 @@ def registro(request):
                     userid,
                     usermail,
                     userpass)
-            # user = authenticate(
-            #         username=formulario.cleaned_data["username"],
-            #         password=formulario.cleaned_data["password1"])
             login(request, user)
             messages.success(request, "Registro Exitoso")
             return redirect(to="home")

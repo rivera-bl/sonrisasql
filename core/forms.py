@@ -27,7 +27,8 @@ class HoraForm(forms.ModelForm):
 class RegistroForm(forms.ModelForm):
     class Meta:
         model = Persona
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ("estado",)
 
 # class CustomUserCreationForm(UserCreationForm):
 #     pass

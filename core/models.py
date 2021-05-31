@@ -83,7 +83,7 @@ class OrdenPedidoProducto(models.Model):
 
 
 class Persona(models.Model):
-    id = models.BigIntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     rut = models.CharField(unique=True, max_length=20)
     contraseña = models.CharField(max_length=20)
     nombre = models.CharField(max_length=50)
@@ -93,20 +93,24 @@ class Persona(models.Model):
     telefono = models.CharField(max_length=20)
     correo_electronico = models.CharField(max_length=80)
     estado = models.CharField(max_length=1)
-
     class Meta:
         managed = False
         db_table = 'persona'
 
-
 class PersonaTipoUsuario(models.Model):
     persona = models.OneToOneField(Persona, models.DO_NOTHING, primary_key=True)
     tipo_usuario = models.ForeignKey('TipoUsuario', models.DO_NOTHING)
-
     class Meta:
         managed = False
         db_table = 'persona_tipo_usuario'
         unique_together = (('persona', 'tipo_usuario'),)
+
+class TipoUsuario(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=30)
+    class Meta:
+        managed = False
+        db_table = 'tipo_usuario'
 
 
 class Producto(models.Model):
@@ -177,11 +181,3 @@ class ServicioProducto(models.Model):
         managed = False
         db_table = 'servicio_producto'
 
-
-class TipoUsuario(models.Model):
-    id = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=30)
-
-    class Meta:
-        managed = False
-        db_table = 'tipo_usuario'
