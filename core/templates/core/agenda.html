@@ -1,0 +1,169 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+<header id="page-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 m-auto text-center">
+          <h1>Agenda tu Hora</h1>
+          <p>¡No te quedes fuera!</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="contact" class="py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card p-4">
+            <div class="card-body">
+              <h4>Dirección</h4>
+              <p>Padre Alonso Ovale 333, Santiago</p>
+              <h4>Email</h4>
+              <p>contacto@lindasonrisa.cl</p>
+              <h4>Teléfono</h4>
+              <p>800 600 3000</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card p-4">
+            <div class="card-body">
+              <h3 class="text-center">Completa este Formulario</h3>
+              <hr>
+              {% load crispy_forms_tags %}
+              <form action="" method="post">
+
+                {% csrf_token %}
+                {{ form | crispy }}
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    Agendar
+                </button>
+
+                {{ mensaje }}
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="p-5 bg-dark text-white">
+    <div class="container">
+      <h1 class="text-center">Preguntas Frecuentes</h1>
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+          <div id="accordion">
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                    ¿?
+                  </a>
+                </h5>
+              </div>
+
+              <div id="collapseOne" class="collapse">
+                <div class="card-body">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam soluta dolorem, eligendi, provident quibusdam tempora! Commodi excepturi labore sunt, cupiditate quas adipisci magni dolorem, numquam saepe aut est qui asperiores!
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                    ¿?
+                  </a>
+                </h5>
+              </div>
+
+              <div id="collapseOne" class="collapse">
+                <div class="card-body">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam soluta dolorem, eligendi, provident quibusdam tempora! Commodi excepturi labore sunt, cupiditate quas adipisci magni dolorem, numquam saepe aut est qui asperiores!
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                    ¿?
+                  </a>
+                </h5>
+              </div>
+
+              <div id="collapseOne" class="collapse">
+                <div class="card-body">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam soluta dolorem, eligendi, provident quibusdam tempora! Commodi excepturi labore sunt, cupiditate quas adipisci magni dolorem, numquam saepe aut est qui asperiores!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div id="accordion">
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                    ¿?
+                  </a>
+                </h5>
+              </div>
+
+              <div id="collapseFour" class="collapse">
+                <div class="card-body">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam soluta dolorem, eligendi, provident quibusdam tempora! Commodi excepturi labore sunt, cupiditate quas adipisci magni dolorem, numquam saepe aut est qui asperiores!
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+                    ¿?
+                  </a>
+                </h5>
+              </div>
+
+              <div id="collapseFive" class="collapse">
+                <div class="card-body">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam soluta dolorem, eligendi, provident quibusdam tempora! Commodi excepturi labore sunt, cupiditate quas adipisci magni dolorem, numquam saepe aut est qui asperiores!
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
+                    ¿?
+                  </a>
+                </h5>
+              </div>
+
+              <div id="collapseSix" class="collapse">
+                <div class="card-body">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam soluta dolorem, eligendi, provident quibusdam tempora! Commodi excepturi labore sunt, cupiditate quas adipisci magni dolorem, numquam saepe aut est qui asperiores!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

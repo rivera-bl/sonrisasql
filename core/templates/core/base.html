@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Linda Sonrisa</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.2.0/ekko-lightbox.css" />
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'core/css/font-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+<body>
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container">
+      <a href="{% url 'home' %}" class="navbar-brand">Linda Sonrisa</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navNavbar"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+              <a href="{% url 'home' %}" class="nav-link">Inicio</a>
+          </li>
+          <li class="nav-item">
+              <a href="{% url 'about' %}" class="nav-link">Conócenos</a>
+          </li>
+          <li class="nav-item">
+              <a href="{% url 'agenda' %}" class="nav-link">Agenda</a>
+          </li>
+          <!-- <li class="nav-item"> -->
+          <!--     <a href="{% url 'contacto' %}" class="nav-link">Contacto</a> -->
+          <!-- </li> -->
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a href="{% url 'logout' %}" class="nav-link">Cerrar Sesión</a>
+            </li>
+            <!-- <li> -->
+            <!--     <a href="#">@{{ user.username }}</a> -->
+            <!-- </li> -->
+          {% else %}
+            <li class="nav-item">
+                <a href="{% url 'registro' %}" class="nav-link">Registrate</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'login' %}" class="nav-link">Iniciar Sesión</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div id="contenido">
+      {% block contenido %}
+      {% endblock %}
+  </div>
+
+
+  <footer id="main-footer" class="text-center p-4">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <p>Copyright 2021 &copy; Linda Sonrisa</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'core/js/jquery.min.js' %}"></script>
+  <script src="{% static 'core/js/popper.min.js' %}"></script>
+  <script src="{% static 'core/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'core/js/slick.js' %}"></script>
+  <script src="{% static 'core/js/main.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.2.0/ekko-lightbox.js"></script>
+</body>
