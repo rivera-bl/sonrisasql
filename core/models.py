@@ -75,7 +75,7 @@ class OrdenPedidoProducto(models.Model):
 
 class Persona(models.Model):
     def __str__(self):
-        return '%s' % self.id
+        return '%s' % self.rut + ' ' + self.nombre + ' ' + self.apellido_paterno
     id = models.AutoField(primary_key=True)
     rut = models.CharField(unique=True, max_length=20)
     contraseña = models.CharField(max_length=20)

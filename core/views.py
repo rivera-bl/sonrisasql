@@ -68,12 +68,11 @@ def ingreso(request):
             else:
                 user = authenticate(username=request.POST.get("rut"), password=request.POST.get("contraseña"))
             login(request, user)
-            messages.success(request, "Registro Exitoso")
             return redirect(to="home")
             con.close()
         else:
             print('No registrado')
-    return render(request, 'registration/ingreso.html', data)
+    return render(request, 'registration/login.html', data)
 
 def registro(request):
     data = {
