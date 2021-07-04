@@ -1,3 +1,56 @@
+BEGIN
+   FOR cur_rec IN (SELECT object_name, object_type
+                   FROM user_objects
+                   WHERE object_type IN
+                             ('TABLE',
+                              'VIEW',
+                              'MATERIALIZED VIEW',
+                              'PACKAGE',
+                              'PROCEDURE',
+                              'FUNCTION',
+                              'SEQUENCE',
+                              'SYNONYM',
+                              'PACKAGE BODY'
+                             ))
+   LOOP
+      BEGIN
+         IF cur_rec.object_type = 'TABLE'
+         THEN
+            EXECUTE IMMEDIATE 'DROP '
+                              || cur_rec.object_type
+                              || ' "'
+                              || cur_rec.object_name
+                              || '" CASCADE CONSTRAINTS';
+         ELSE
+            EXECUTE IMMEDIATE 'DROP '
+                              || cur_rec.object_type
+                              || ' "'
+                              || cur_rec.object_name
+                              || '"';
+         END IF;
+      EXCEPTION
+         WHEN OTHERS
+         THEN
+            DBMS_OUTPUT.put_line ('FAILED: DROP '
+                                  || cur_rec.object_type
+                                  || ' "'
+                                  || cur_rec.object_name
+                                  || '"'
+                                 );
+      END;
+   END LOOP;
+   FOR cur_rec IN (SELECT * 
+                   FROM all_synonyms 
+                   WHERE table_owner IN (SELECT USER FROM dual))
+   LOOP
+      BEGIN
+         EXECUTE IMMEDIATE 'DROP PUBLIC SYNONYM ' || cur_rec.synonym_name;
+      END;
+   END LOOP;
+END;
+/
+
+ALTER SESSION SET nls_date_format = 'YYYY-MM-DD hh24:mi:ss';
 
 CREATE TABLE boleta (
     id             INTEGER NOT NULL,
@@ -31,8 +84,9 @@ ALTER TABLE ficha_economica ADD CONSTRAINT ficha_economica_pk PRIMARY KEY ( id )
 
 CREATE TABLE hora (
     id           INTEGER NOT NULL,
-    fecha        VARCHAR2(50) NOT NULL,
+    fecha        DATE NOT NULL,
     estado       VARCHAR2(50) NOT NULL,
+    medico_persona_id   INTEGER NOT NULL,
     persona_id   INTEGER NOT NULL,
     servicio_id  INTEGER NOT NULL
 );
@@ -58,7 +112,7 @@ CREATE TABLE orden_pedido_producto (
 CREATE TABLE persona (
     id                  INTEGER NOT NULL,
     rut                 VARCHAR2(20) NOT NULL,
-    contraseÃ±a          VARCHAR2(20) NOT NULL,
+    contraseña          VARCHAR2(20) NOT NULL,
     nombre              VARCHAR2(50) NOT NULL,
     apellido_paterno    VARCHAR2(50) NOT NULL,
     apellido_materno    VARCHAR2(50) NOT NULL,
@@ -223,7 +277,7 @@ CREATE SEQUENCE seq_tipo_usuario START WITH 1 INCREMENT BY 1;
 
 CREATE OR REPLACE PROCEDURE insertar_persona (
     rut                 VARCHAR2,
-    contraseÃ±a          VARCHAR2,
+    contraseña          VARCHAR2,
     nombre              VARCHAR2,
     apellido_paterno    VARCHAR2,
     apellido_materno    VARCHAR2,
@@ -239,7 +293,7 @@ BEGIN
     INSERT INTO persona (
         id,
         rut,
-        contraseÃ±a,
+        contraseña,
         nombre,
         apellido_paterno,
         apellido_materno,
@@ -249,7 +303,7 @@ BEGIN
     ) VALUES (
         newId,
         rut,
-        contraseÃ±a,
+        contraseña,
         nombre,
         apellido_paterno,
         apellido_materno,
@@ -264,6 +318,7 @@ END;
 CREATE OR REPLACE PROCEDURE insertar_hora (
     fecha               VARCHAR2,
     estado              VARCHAR2,
+    medico_persona_id   INTEGER,
     persona_id          INTEGER,
     servicio_id         INTEGER,
     newId out number
@@ -276,12 +331,14 @@ BEGIN
         id,
         fecha,
         estado,
+        medico_persona_id,
         persona_id,
         servicio_id
     ) VALUES (
         newId,
-        fecha,
+        to_date(fecha, 'yyyy/mm/dd'),
         estado,
+        medico_persona_id,
         persona_id,
         servicio_id
     );
@@ -306,24 +363,31 @@ INSERT INTO tipo_usuario (id, nombre) VALUES (seq_tipo_usuario.nextval, 'cliente
 INSERT INTO tipo_usuario (id, nombre) VALUES (seq_tipo_usuario.nextval, 'empleado');
 INSERT INTO tipo_usuario (id, nombre) VALUES (seq_tipo_usuario.nextval, 'proveedor');
 INSERT INTO tipo_usuario (id, nombre) VALUES (seq_tipo_usuario.nextval, 'administrador');
+INSERT INTO tipo_usuario (id, nombre) VALUES (seq_tipo_usuario.nextval, 'médico');
 
 INSERT INTO persona
-    (id, rut, contraseÃ±a, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, telefono, correo_electronico)
+    (id, rut, contraseña, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, telefono, correo_electronico)
     VALUES
     (seq_persona.NEXTVAL, '1111111-1', '1234', 'Ignacio', 'Etchepare', 'Quijada', to_date('1992/11/25', 'yyyy/mm/dd'), '123456789', 'correo@portafolio.cl');
+INSERT INTO persona
+    (id, rut, contraseña, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, telefono, correo_electronico)
+    VALUES
+    (seq_persona.NEXTVAL, '2222222-2', '1234', 'Juanito', 'Pérez', 'Rodríguez', to_date('1992/11/25', 'yyyy/mm/dd'), '123456788', 'doctor@portafolio.cl');
 
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 1);
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 2);
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 3);
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 4);
 
-INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'DiagnÃ³stico Inicial');
+INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (2, 5);
+
+INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Diagnóstico Inicial');
 INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Consulta Urgencia Dental');
 
 create or replace PROCEDURE modificar_persona (
     old_id                  NUMBER,
     new_rut                 VARCHAR2,
-    new_contraseÃ±a          VARCHAR2,
+    new_contraseña          VARCHAR2,
     new_nombre              VARCHAR2,
     new_apellido_paterno    VARCHAR2,
     new_apellido_materno    VARCHAR2,
@@ -336,7 +400,7 @@ BEGIN
     UPDATE persona
     SET
         rut = new_rut,
-        contraseÃ±a = new_contraseÃ±a,
+        contraseña = new_contraseña,
         nombre = new_nombre,
         apellido_paterno = new_apellido_paterno,
         apellido_materno = new_apellido_materno,
@@ -349,5 +413,178 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE  PROCEDURE insertar_proveedor (
+    nombre              VARCHAR2,
+    rubro               VARCHAR2,
+    nombre_contacto     VARCHAR2,
+    apellido_contacto     VARCHAR2,
+    telefono_contacto     VARCHAR2,    
+    correo_contacto     VARCHAR2,
+    newId out number
+) is
+BEGIN
+    newId := seq_proveedor.NEXTVAL;
+    INSERT INTO proveedor (
+        id,
+        nombre,
+        rubro,
+        nombre_contacto,
+        apellido_contacto,
+        telefono_contacto,
+        correo_contacto
+    ) VALUES (
+        newId,
+        nombre,
+        rubro,
+        nombre_contacto,
+        apellido_contacto,
+        telefono_contacto,
+        correo_contacto
+    );
+
+END;
+/
+commit;
+create or replace NONEDITIONABLE PROCEDURE modificar_proveedor (
+    old_id                  NUMBER,
+    new_nombre                 VARCHAR2,
+    new_rubro          VARCHAR2,
+    new_nombre_contacto              VARCHAR2,
+    new_apellido_contacto    VARCHAR2,
+    new_telefono_contacto    VARCHAR2,
+    new_correo_contacto    VARCHAR2
+)
+IS
+BEGIN
+    UPDATE proveedor
+    SET
+    nombre = new_nombre,
+    rubro = new_rubro,
+    nombre_contacto = new_nombre_contacto,
+    apellido_contacto = new_apellido_contacto,
+    telefono_contacto = new_telefono_contacto,
+    correo_contacto = new_correo_contacto
+        
+    WHERE
+        id = old_id;
+    COMMIT;
+END;
+/
+
+CREATE OR REPLACE  PROCEDURE insertar_hora (
+    fecha              VARCHAR2,
+    cliente_persona_id               VARCHAR2,
+    medico_persona_id               VARCHAR2,
+    servicio_id     VARCHAR2,
+    newId out number
+) is
+BEGIN
+    newId := seq_hora.NEXTVAL;
+    INSERT INTO hora (
+        id,
+        fecha,
+        persona_id,
+        medico_persona_id,
+        servicio_id,
+        estado
+    ) VALUES (
+        newId,
+        to_date(fecha, 'YYYY-MM-DD HH24:MI:SS'),
+        cliente_persona_id,
+        medico_persona_id,
+        servicio_id,
+        'PENDIENTE'
+    );
+
+END;
+/
+
+
+CREATE OR REPLACE NONEDITIONABLE PROCEDURE insertar_familia_producto (
+    nombre  VARCHAR2,
+    newid   OUT NUMBER
+) IS
+BEGIN
+    newid := seq_familia_producto.nextval;
+    INSERT INTO familia_producto (
+        id,
+        nombre
+    ) VALUES (
+        newid,
+        nombre
+    );
+
+END;
+/
+
+CREATE OR REPLACE NONEDITIONABLE PROCEDURE modificar_familia (
+    old_id      NUMBER,
+    new_nombre  VARCHAR2
+) IS
+BEGIN
+    UPDATE familia_producto
+    SET
+        nombre = new_nombre
+    WHERE
+        id = old_id;
+
+    COMMIT;
+END;
+/
+
+create or replace PROCEDURE insertar_producto (
+    nombre        VARCHAR2,
+    precio_venta  NUMBER,
+    stock_minimo  NUMBER,
+    familia_producto_id NUMBER,
+    newid         OUT NUMBER
+) IS
+BEGIN
+    newid := seq_producto.nextval;
+    INSERT INTO producto (
+        id,
+        nombre,
+        precio_venta,
+        stock,
+        stock_minimo,
+        familia_producto_id,
+        estado
+    ) VALUES (
+        newid,
+        nombre,
+        precio_venta,
+        0,
+        stock_minimo,
+        familia_producto_id,
+        1
+    );
+
+END;
+/
+
+
+
+create or replace NONEDITIONABLE PROCEDURE modificar_producto (
+    old_id                  NUMBER,
+    new_nombre                 VARCHAR2,
+    new_precio_venta NUMBER,
+    new_stock_minimo NUMBER,
+    new_stock NUMBER,
+    new_familia_producto_id NUMBER
+   )
+IS
+BEGIN
+    UPDATE producto
+    SET
+    nombre = new_nombre,
+    precio_venta = new_precio_venta,
+    stock_minimo = new_stock_minimo,
+    stock = new_stock,
+    familia_producto_id = new_familia_producto_id
+    WHERE
+        id = old_id;
+    COMMIT;
+END;
+/
 
 commit;
