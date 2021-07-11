@@ -10,19 +10,18 @@ endif
 set shortmess=aoO
 badd +1 dev/python/proj/sonrisasql/todo.md
 badd +13 dev/python/proj/sonrisasql/core/urls.py
-badd +36 dev/python/proj/sonrisasql/core/models.py
+badd +41 dev/python/proj/sonrisasql/core/models.py
 badd +135 dev/python/proj/sonrisasql/core/views.py
-badd +32 dev/python/proj/sonrisasql/core/templates/core/base.html
+badd +35 dev/python/proj/sonrisasql/core/templates/core/base.html
 badd +1 dev/python/proj/sonrisasql/core/templates/core/upload_ficha.html
 badd +42 dev/python/proj/sonrisasql/core/forms.py
 badd +31 dev/python/proj/sonrisasql/core/templates/core/agenda.html
 badd +6 dev/python/proj/sonrisasql/core/templates/core/upload.html
 badd +371 dev/python/proj/sonrisasql/script.sql
 badd +0 man://BEGIN(7)
-badd +1 dev/python/proj/sonrisasql/.gitignore
 argglobal
 %argdel
-edit dev/python/proj/sonrisasql/core/models.py
+edit dev/python/proj/sonrisasql/core/templates/core/base.html
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
@@ -42,7 +41,6 @@ set winwidth=1
 exe 'vert 1resize ' . ((&columns * 118 + 118) / 237)
 exe 'vert 2resize ' . ((&columns * 118 + 118) / 237)
 argglobal
-balt dev/python/proj/sonrisasql/.gitignore
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -53,12 +51,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 1 - ((0 * winheight(0) + 27) / 55)
+let s:l = 35 - ((26 * winheight(0) + 27) / 55)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 1
-normal! 0
+keepjumps 35
+normal! 037|
 lcd ~/dev/python/proj/sonrisasql
 wincmd w
 argglobal
@@ -77,7 +75,7 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 373 - ((37 * winheight(0) + 27) / 55)
+let s:l = 373 - ((39 * winheight(0) + 27) / 55)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
