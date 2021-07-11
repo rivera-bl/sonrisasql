@@ -1,3 +1,5 @@
+media/
+.gitignore
 __pycache__
 core/migrations/*
-
+todo.md

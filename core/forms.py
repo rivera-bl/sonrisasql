@@ -1,7 +1,10 @@
 from django import forms
-from .models import Hora, Persona, Servicio
+from .models import Hora, Persona, Servicio, FichaEconomica
 from django.contrib.auth.models import User
 import datetime
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 class HoraForm(forms.ModelForm):
     persona = forms.ModelChoiceField(queryset=Persona.objects.all(),
@@ -11,17 +14,15 @@ class HoraForm(forms.ModelForm):
     servicio = forms.ModelChoiceField(queryset=Servicio.objects.all(),
                                     to_field_name = 'id',
                                     empty_label="Seleccionar Servicio")
+    
+
     class Meta:
         model = Hora
         fields = '__all__'
         exclude = ("estado", "id")
-
-        # widgets = {
-        #     "fecha": forms.SelectDateWidget(
-        #         years=range(datetime.date.today().year, datetime.date.today().year+2),
-        #         attrs=({'style': 'width: 33%; display: inline-block;'}),
-        #         )
-        # }
+        
+        # fecha = forms.DateTimeField()
+        widgets = { 'fecha': DateInput() }
 
 class IngresoForm(forms.ModelForm):
     contraseña=forms.CharField(widget=forms.PasswordInput())
@@ -34,3 +35,8 @@ class RegistroForm(forms.ModelForm):
     class Meta:
         model = Persona
         exclude = ("estado",)
+
+class UploadForm(forms.ModelForm):
+    class Meta:
+        model = FichaEconomica
+        fields = ['tipo_ficha', 'documento']

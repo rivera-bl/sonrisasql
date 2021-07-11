@@ -314,7 +314,6 @@ BEGIN
 END;
 /
 
-
 CREATE OR REPLACE PROCEDURE insertar_hora (
     fecha               VARCHAR2,
     estado              VARCHAR2,
@@ -356,6 +355,30 @@ BEGIN
     if id_tipo_usuario is not null then
         INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (id_persona, id_tipo_usuario);
     end if;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE insertar_ficha (
+    tipo_ficha  NVARCHAR2,
+    documento   VARCHAR2,
+    persona_id  INTEGER,
+    newId out number
+)
+IS
+BEGIN
+    newId := seq_ficha_economica.NEXTVAL;
+    
+    INSERT INTO ficha_economica (
+      id,
+      tipo_ficha,
+      documento,
+      persona_id
+    ) VALUES (
+      newId,
+      tipo_ficha,
+      documento,
+      persona_id
+    );
 END;
 /
 

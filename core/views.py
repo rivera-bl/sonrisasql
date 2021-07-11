@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
-from .forms import HoraForm, RegistroForm, IngresoForm
+from .forms import HoraForm, RegistroForm, IngresoForm, UploadForm, DateInput
+from .models import FichaEconomica
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
 import cx_Oracle
 
 dsn_tns = cx_Oracle.makedsn('localhost', '1521', service_name='xe')
@@ -114,3 +116,56 @@ def registro(request):
         data["form"] = formulario
 
     return render(request, 'registration/registro.html', data)
+
+def upload(request):
+    context = {}
+    if request.method == 'POST':
+        uploaded_file = request.FILES['document']
+        fs = FileSystemStorage()
+        name = fs.save(uploaded_file.name, uploaded_file)
+        context['url'] = fs.url(name)
+        print(uploaded_file.name)
+        print(uploaded_file.size)
+            
+        conn = cx_Oracle.connect(
+                user=r'portafolio', 
+                password='portafolio', 
+                dsn=dsn_tns)
+        cursor = conn.cursor()
+        cursor.callproc('insertar_ficha', ["1", "test", 21
+            # request.POST.get(request.user.id)
+        ])
+        conn.commit()
+
+    return render(request, 'core/upload.html', context) 
+
+# def list_ficha(request):
+#     fichas = FichaEconomica.objects.all()
+#     return render(request, 'core/list_ficha.html', {
+#         'documentos' : fichas
+#         }) 
+
+# def upload_ficha(request):
+#     data = {
+#         'form': FichaForm()
+#     }
+#     con = cx_Oracle.connect(user=r'portafolio', password='portafolio', dsn=dsn_tns)
+    
+#     if request.method == 'POST':
+#         form = FichaForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             conn = cx_Oracle.connect(
+#                     user=r'portafolio', 
+#                     password='portafolio', 
+#                     dsn=dsn_tns)
+#             cursor = conn.cursor()
+#             fichaId = cursor.var(int)
+
+#             form.save()
+
+#             return redirect('list_ficha')
+#     else:
+#         form = FichaForm()
+#     return render(request, 'core/upload_ficha.html', {
+#         'form' : form
+#     })
