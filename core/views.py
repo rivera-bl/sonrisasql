@@ -21,7 +21,9 @@ def agenda(request):
 
     if request.method == 'POST':
         formulario = HoraForm(data=request.POST)
-        if formulario.is_valid():
+        print(request.POST.get("medico_persona_id"))
+        #if formulario.is_valid():
+        if request.POST.get("fecha") and request.POST.get("medico_persona_id") and request.POST.get("servicio"):
             conn = cx_Oracle.connect(
                     user=r'portafolio', 
                     password='portafolio', 
