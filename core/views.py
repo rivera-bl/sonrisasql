@@ -32,7 +32,11 @@ def agenda(request):
             cursor = conn.cursor()
             newId = cursor.var(int)
 
-            cursor.callproc('insertar_hora', ["fecha", request.user.id, "medico_persona_id", 1, newId])
+            print([request.POST.get("fecha"), request.user.id, request.POST.get("medico_persona_id"), request.POST.get("servicio"), newId])
+
+            # se necesita :                  fecha, cliente_persona_id, medico_persona_id, servicio_id, newId,
+            cursor.callproc('insertar_hora', [request.POST.get("fecha"), request.user.id, request.POST.get("medico_persona_id"), request.POST.get("servicio"), newId])
+            # cursor.callproc('insertar_hora', ["fecha", request.user.id, "medico_persona_id", 1, newId])
             conn.commit()
             return redirect(to="home")
         data["form"] = formulario
