@@ -34,7 +34,6 @@ class FichaEconomica(models.Model):
     id = models.AutoField(primary_key=True)
     tipo_ficha = models.CharField(max_length=50)
     documento = models.CharField(max_length=255)
-    # documento = models.FileField(upload_to='ficha/pdf/')
     persona = models.ForeignKey('Persona', models.DO_NOTHING)
 
     class Meta:
@@ -43,6 +42,8 @@ class FichaEconomica(models.Model):
 
 
 class Hora(models.Model):
+    def __str__(self):
+        return self.id
     id = models.AutoField(primary_key=True)
     fecha = models.DateTimeField()
     estado = models.CharField(max_length=50)
