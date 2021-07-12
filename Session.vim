@@ -10,18 +10,19 @@ endif
 set shortmess=aoO
 badd +1 dev/python/proj/sonrisasql/todo.md
 badd +13 dev/python/proj/sonrisasql/core/urls.py
-badd +50 dev/python/proj/sonrisasql/core/models.py
-badd +17 dev/python/proj/sonrisasql/core/views.py
+badd +49 dev/python/proj/sonrisasql/core/models.py
+badd +2 dev/python/proj/sonrisasql/core/views.py
 badd +34 dev/python/proj/sonrisasql/core/templates/core/base.html
 badd +1 dev/python/proj/sonrisasql/core/templates/core/upload_ficha.html
-badd +22 dev/python/proj/sonrisasql/core/forms.py
+badd +27 dev/python/proj/sonrisasql/core/forms.py
 badd +14 dev/python/proj/sonrisasql/core/templates/core/upload.html
 badd +373 dev/python/proj/sonrisasql/script.sql
 badd +1 man://BEGIN(7)
 badd +0 term://~/dev/python/proj/sonrisasql//97942:/usr/bin/zsh
+badd +73 dev/python/proj/sonrisasql/core/templates/core/agenda.html
 argglobal
 %argdel
-edit dev/python/proj/sonrisasql/core/forms.py
+edit dev/python/proj/sonrisasql/core/models.py
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
@@ -41,7 +42,7 @@ set winwidth=1
 exe 'vert 1resize ' . ((&columns * 118 + 118) / 237)
 exe 'vert 2resize ' . ((&columns * 118 + 118) / 237)
 argglobal
-balt dev/python/proj/sonrisasql/core/views.py
+balt dev/python/proj/sonrisasql/core/templates/core/agenda.html
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}

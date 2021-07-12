@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import HoraForm, RegistroForm, IngresoForm, UploadForm, DateInput
-from .models import FichaEconomica
+from .models import FichaEconomica, Hora
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
@@ -135,6 +135,13 @@ def upload(request):
         conn.commit()
 
     return render(request, 'core/upload.html', context) 
+
+def list_horas(request):
+    horas = Hora.objects.all()
+    data = {
+            'horas': horas
+    }
+    return render(request, 'core/agenda.html', data)
 
 # def list_ficha(request):
 #     fichas = FichaEconomica.objects.all()
