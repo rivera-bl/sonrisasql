@@ -10,18 +10,18 @@ endif
 set shortmess=aoO
 badd +1 dev/python/proj/sonrisasql/todo.md
 badd +13 dev/python/proj/sonrisasql/core/urls.py
-badd +41 dev/python/proj/sonrisasql/core/models.py
-badd +135 dev/python/proj/sonrisasql/core/views.py
-badd +35 dev/python/proj/sonrisasql/core/templates/core/base.html
+badd +50 dev/python/proj/sonrisasql/core/models.py
+badd +17 dev/python/proj/sonrisasql/core/views.py
+badd +34 dev/python/proj/sonrisasql/core/templates/core/base.html
 badd +1 dev/python/proj/sonrisasql/core/templates/core/upload_ficha.html
-badd +42 dev/python/proj/sonrisasql/core/forms.py
-badd +31 dev/python/proj/sonrisasql/core/templates/core/agenda.html
-badd +6 dev/python/proj/sonrisasql/core/templates/core/upload.html
-badd +371 dev/python/proj/sonrisasql/script.sql
-badd +0 man://BEGIN(7)
+badd +22 dev/python/proj/sonrisasql/core/forms.py
+badd +14 dev/python/proj/sonrisasql/core/templates/core/upload.html
+badd +373 dev/python/proj/sonrisasql/script.sql
+badd +1 man://BEGIN(7)
+badd +0 term://~/dev/python/proj/sonrisasql//97942:/usr/bin/zsh
 argglobal
 %argdel
-edit dev/python/proj/sonrisasql/core/templates/core/base.html
+edit dev/python/proj/sonrisasql/core/forms.py
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
@@ -41,6 +41,7 @@ set winwidth=1
 exe 'vert 1resize ' . ((&columns * 118 + 118) / 237)
 exe 'vert 2resize ' . ((&columns * 118 + 118) / 237)
 argglobal
+balt dev/python/proj/sonrisasql/core/views.py
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -51,12 +52,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 35 - ((26 * winheight(0) + 27) / 55)
+let s:l = 1 - ((0 * winheight(0) + 28) / 56)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 35
-normal! 037|
+keepjumps 1
+normal! 0
 lcd ~/dev/python/proj/sonrisasql
 wincmd w
 argglobal
@@ -75,12 +76,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 373 - ((39 * winheight(0) + 27) / 55)
+let s:l = 497 - ((27 * winheight(0) + 28) / 56)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 373
-normal! 0
+keepjumps 497
+normal! 030|
 lcd ~/dev/python/proj/sonrisasql
 wincmd w
 exe 'vert 1resize ' . ((&columns * 118 + 118) / 237)
