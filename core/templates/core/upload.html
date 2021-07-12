@@ -4,14 +4,52 @@
 
 {% block contenido %}
 
-  <h2>Subir<h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name="document">
-    <button type="submit">Subir Ficha</button>
-  </form>
-  {% if url %}
-    <p>Uploaded file: <a href="{{ url }}">{{ url }}</a></p>
-  {% endif %}
+  <!-- <h2>Subir<h2> -->
+  <!--   {% csrf_token %} -->
+  <!--   <button type="submit">Subir Ficha</button> -->
+  <!-- </form> -->
+  <!-- {% if url %} -->
+  <!--   <p>Uploaded file: <a href="{{ url }}">{{ url }}</a></p> -->
+  <!-- {% endif %} -->
+
+
+  <section id="contact" class="py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card p-4">
+            <div class="card-body">
+              <h4>Dirección</h4>
+              <p>Padre Alonso Ovale 333, Santiago</p>
+              <h4>Email</h4>
+              <p>contacto@lindasonrisa.cl</p>
+              <h4>Teléfono</h4>
+              <p>800 600 3000</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card p-4">
+            <div class="card-body">
+              <h3 class="text-center">Subir Documento</h3>
+              <hr>
+              {% load crispy_forms_tags %}
+              <form method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+                {{ form | crispy }}
+
+                <input type="file" class="btn btn-block" name="document">
+                <button type="submit" class="btn btn-primary btn-block">
+                    Enviar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
 {% endblock %}

@@ -7,21 +7,13 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 class HoraForm(forms.ModelForm):
-    # persona = forms.ModelChoiceField(queryset=Persona.objects.all(),
-    #                                 to_field_name = 'id',
-    #                                 empty_label="Seleccionar persona")
-
     servicio = forms.ModelChoiceField(queryset=Servicio.objects.all(),
                                     to_field_name = 'id',
                                     empty_label="Seleccionar Servicio")
-    
-
     class Meta:
         model = Hora
         fields = '__all__'
         exclude = ("estado", "id", "persona")
-        
-        # fecha = forms.DateTimeField()
         widgets = { 'fecha': DateInput() }
 
 class IngresoForm(forms.ModelForm):
@@ -35,6 +27,7 @@ class RegistroForm(forms.ModelForm):
     class Meta:
         model = Persona
         exclude = ("estado",)
+        widgets = { 'fecha_nacimiento': DateInput() }
 
 class UploadForm(forms.ModelForm):
     class Meta:

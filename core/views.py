@@ -16,10 +16,7 @@ def contacto(request):
 
 def agenda(request):
     data = {
-            # 'form': HoraForm()
-            # toma el id del usuario en la tabla auth_user, no el de persona
             'form': HoraForm(initial={'persona': request.user.id})
-            # ? select p.id from persona p JOIN auth_user a ON p.rut = a.username;
     }
 
     if request.method == 'POST':
@@ -34,9 +31,7 @@ def agenda(request):
 
             print([request.POST.get("fecha"), request.user.id, request.POST.get("medico_persona_id"), request.POST.get("servicio"), newId])
 
-            # se necesita :                  fecha, cliente_persona_id, medico_persona_id, servicio_id, newId,
             cursor.callproc('insertar_hora', [request.POST.get("fecha"), request.user.id, request.POST.get("medico_persona_id"), request.POST.get("servicio"), newId])
-            # cursor.callproc('insertar_hora', ["fecha", request.user.id, "medico_persona_id", 1, newId])
             conn.commit()
             return redirect(to="home")
         data["form"] = formulario
@@ -142,34 +137,3 @@ def list_horas(request):
             'horas': horas
     }
     return render(request, 'core/agenda.html', data)
-
-# def list_ficha(request):
-#     fichas = FichaEconomica.objects.all()
-#     return render(request, 'core/list_ficha.html', {
-#         'documentos' : fichas
-#         }) 
-
-# def upload_ficha(request):
-#     data = {
-#         'form': FichaForm()
-#     }
-#     con = cx_Oracle.connect(user=r'portafolio', password='portafolio', dsn=dsn_tns)
-    
-#     if request.method == 'POST':
-#         form = FichaForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             conn = cx_Oracle.connect(
-#                     user=r'portafolio', 
-#                     password='portafolio', 
-#                     dsn=dsn_tns)
-#             cursor = conn.cursor()
-#             fichaId = cursor.var(int)
-
-#             form.save()
-
-#             return redirect('list_ficha')
-#     else:
-#         form = FichaForm()
-#     return render(request, 'core/upload_ficha.html', {
-#         'form' : form
-#     })
