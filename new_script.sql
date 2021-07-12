@@ -377,11 +377,11 @@ INSERT INTO tipo_usuario (id, nombre) VALUES (seq_tipo_usuario.nextval, 'médico
 INSERT INTO persona
     (id, rut, contraseña, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, telefono, correo_electronico)
     VALUES
-    (seq_persona.NEXTVAL, '1111111-1', '1234', 'Ignacio', 'Etchepare', 'Quijada', to_date('1992/11/25', 'yyyy/mm/dd'), '123456789', 'correo@portafolio.cl');
+    (seq_persona.NEXTVAL, '18170544-2', '1234', 'Ignacio', 'Etchepare', 'Quijada', to_date('1992/11/25', 'yyyy/mm/dd'), '123456789', 'i.etchepare@duocuc.cl');
 INSERT INTO persona
     (id, rut, contraseña, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, telefono, correo_electronico)
     VALUES
-    (seq_persona.NEXTVAL, '2222222-2', '1234', 'Juanito', 'Pérez', 'Rodríguez', to_date('1992/11/25', 'yyyy/mm/dd'), '123456788', 'doctor@portafolio.cl');
+    (seq_persona.NEXTVAL, '66666666-6', '1234', 'Pablo', 'Rojas', 'Rodríguez', to_date('1992/07/25', 'yyyy/mm/dd'), '123456788', 'pablo.rojas@duocuc.cl');
 
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 1);
 INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (1, 2);
@@ -392,14 +392,17 @@ INSERT INTO persona_tipo_usuario (persona_id, tipo_usuario_id) VALUES (2, 5);
 
 INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Diagnóstico Inicial');
 INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Consulta Urgencia Dental');
+INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Estetica Dental');
+INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Cirugía Bucal');
+INSERT INTO servicio (id, nombre) VALUES (seq_servicio.nextval, 'Urgencias de Traumatismos');
 
-INSERT INTO proveedor (id, nombre, rubro, nombre_contacto, apellido_contacto, telefono_contacto, correo_contacto) VALUES (seq_proveedor.nextval, 'Proveedor 1', 'Rubro 1', 'Contacto 1', 'Apellido 1', '1111111', 'proveedor@portafolio.cl');
-INSERT INTO proveedor (id, nombre, rubro, nombre_contacto, apellido_contacto, telefono_contacto, correo_contacto) VALUES (seq_proveedor.nextval, 'Proveedor 2', 'Rubro 2', 'Contacto 2', 'Apellido 2', '2222222', 'proveedor@portafolio.cl');
-INSERT INTO proveedor (id, nombre, rubro, nombre_contacto, apellido_contacto, telefono_contacto, correo_contacto) VALUES (seq_proveedor.nextval, 'Proveedor 3', 'Rubro 3', 'Contacto 3', 'Apellido 3', '3333333', 'proveedor@portafolio.cl');
+INSERT INTO proveedor (id, nombre, rubro, nombre_contacto, apellido_contacto, telefono_contacto, correo_contacto) VALUES (seq_proveedor.nextval, 'MayorDent', 'Odontologia', 'Contacto 1', 'Apellido 1', '1111111', 'proveedor@portafolio.cl');
+INSERT INTO proveedor (id, nombre, rubro, nombre_contacto, apellido_contacto, telefono_contacto, correo_contacto) VALUES (seq_proveedor.nextval, '3M', 'Mayorista Dental', 'Juan', 'Lopez', '123456789', 'proveedor@portafolio.cl');
+INSERT INTO proveedor (id, nombre, rubro, nombre_contacto, apellido_contacto, telefono_contacto, correo_contacto) VALUES (seq_proveedor.nextval, 'Expro Dental', 'Insumos Dentales', 'Contacto 3', 'Apellido 3', '3333333', 'proveedor@portafolio.cl');
 
-INSERT INTO familia_producto (id, nombre) VALUES (seq_familia_producto.nextval, 'Familia 1');
-INSERT INTO familia_producto (id, nombre) VALUES (seq_familia_producto.nextval, 'Familia 2');
-INSERT INTO familia_producto (id, nombre) VALUES (seq_familia_producto.nextval, 'Familia 3');
+INSERT INTO familia_producto (id, nombre) VALUES (seq_familia_producto.nextval, 'Protesis');
+INSERT INTO familia_producto (id, nombre) VALUES (seq_familia_producto.nextval, 'Blanqueador');
+INSERT INTO familia_producto (id, nombre) VALUES (seq_familia_producto.nextval, 'Dental');
 
 INSERT INTO producto (id, nombre, precio_venta, stock, stock_minimo, estado, familia_producto_id) VALUES (seq_producto.nextval, 'Producto 1', 1000, 0, 10, '1', 1);
 INSERT INTO producto (id, nombre, precio_venta, stock, stock_minimo, estado, familia_producto_id) VALUES (seq_producto.nextval, 'Producto 2', 2000, 0, 10, '1', 2);
@@ -521,6 +524,29 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE PROCEDURE insertar_ficha (
+    tipo_ficha  NVARCHAR2,
+    documento   VARCHAR2,
+    persona_id  INTEGER,
+    newId out number
+)
+IS
+BEGIN
+    newId := seq_ficha_economica.NEXTVAL;
+
+    INSERT INTO ficha_economica (
+      id,
+      tipo_ficha,
+      documento,
+      persona_id
+    ) VALUES (
+      newId,
+      tipo_ficha,
+      documento,
+      persona_id
+    );
+END;
+/
 
 CREATE OR REPLACE NONEDITIONABLE PROCEDURE insertar_familia_producto (
     nombre  VARCHAR2,

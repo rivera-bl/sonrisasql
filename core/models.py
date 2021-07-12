@@ -98,6 +98,8 @@ class Persona(models.Model):
 
 
 class PersonaTipoUsuario(models.Model):
+    def __str__(self):
+        return '%s' % self.persona
     persona = models.OneToOneField(Persona, models.DO_NOTHING, primary_key=True)
     tipo_usuario = models.ForeignKey('TipoUsuario', models.DO_NOTHING)
 

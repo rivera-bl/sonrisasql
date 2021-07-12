@@ -1,5 +1,5 @@
 from django import forms
-from .models import Hora, Persona, Servicio, FichaEconomica
+from .models import Hora, Persona, Servicio, FichaEconomica, PersonaTipoUsuario
 from django.contrib.auth.models import User
 import datetime
 
@@ -10,6 +10,9 @@ class HoraForm(forms.ModelForm):
     servicio = forms.ModelChoiceField(queryset=Servicio.objects.all(),
                                     to_field_name = 'id',
                                     empty_label="Seleccionar Servicio")
+    medico_persona_id = forms.ModelChoiceField(queryset=PersonaTipoUsuario.objects.all().filter(tipo_usuario=5),
+                                    #to_field_name = 'persona',
+                                    empty_label="Seleccionar Médico")
     class Meta:
         model = Hora
         fields = '__all__'
