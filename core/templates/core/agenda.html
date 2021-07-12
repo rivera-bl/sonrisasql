@@ -55,25 +55,6 @@
     </div>
   </section>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Fecha</th>
-        <th>Medico</th>
-        <th>Servicio</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for hora in horas %}
-        <tr>
-          <td>{{ hora.fecha }}</td>
-          <td>{{ hora.medico_persona_id }}</td>
-          <td>{{ hora.servicio }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
   <!-- FAQ -->
   <section id="faq" class="p-5 bg-dark text-white">
     <div class="container">

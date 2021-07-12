@@ -98,7 +98,11 @@
             <div class="col-md-6 align-self-center">
               <h3>¡Agenda tu hora!</h3>
               <p>Somos un equipo de profesionales y tratamos día a día de hacer de la visita al dentista una experiencia agradable, en un ambiente familiar y cercano.</p>
-              <a href="{% url 'agenda' %}" class="btn btn-outline-danger btn-lg">Agenda</a>
+              {% if user.is_authenticated %}
+                <a href="{% url 'agenda' %}" class="btn btn-outline-danger btn-lg">Agenda</a>
+              {% else %}
+                <a href="{% url 'ingreso' %}" class="btn btn-outline-danger btn-lg">Agenda</a>
+              {% endif %}
             </div>
             <div class="col-md-6">
                 <img src="{% static 'core/img/dentist1.png' %}" class="img-fluid" alt="">
