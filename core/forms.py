@@ -7,9 +7,9 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 class HoraForm(forms.ModelForm):
-    persona = forms.ModelChoiceField(queryset=Persona.objects.all(),
-                                    to_field_name = 'id',
-                                    empty_label="Seleccionar persona")
+    # persona = forms.ModelChoiceField(queryset=Persona.objects.all(),
+    #                                 to_field_name = 'id',
+    #                                 empty_label="Seleccionar persona")
 
     servicio = forms.ModelChoiceField(queryset=Servicio.objects.all(),
                                     to_field_name = 'id',
@@ -19,7 +19,7 @@ class HoraForm(forms.ModelForm):
     class Meta:
         model = Hora
         fields = '__all__'
-        exclude = ("estado", "id")
+        exclude = ("estado", "id", "persona")
         
         # fecha = forms.DateTimeField()
         widgets = { 'fecha': DateInput() }

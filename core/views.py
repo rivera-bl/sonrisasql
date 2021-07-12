@@ -32,13 +32,7 @@ def agenda(request):
             cursor = conn.cursor()
             newId = cursor.var(int)
 
-            # me tira error ORA-01861: literal does not match format string
-            cursor.callproc('insertar_hora', [
-                request.POST.get("fecha"),
-                "1",
-                request.user.id,
-                1,
-                newId])
+            cursor.callproc('insertar_hora', ["fecha", request.user.id, "medico_persona_id", 1, newId])
             conn.commit()
             return redirect(to="home")
         data["form"] = formulario
@@ -132,9 +126,8 @@ def upload(request):
                 password='portafolio', 
                 dsn=dsn_tns)
         cursor = conn.cursor()
-        cursor.callproc('insertar_ficha', ["1", "test", 21
-            # request.POST.get(request.user.id)
-        ])
+        newId = cursor.var(int)
+        cursor.callproc('insertar_ficha', ["afp", context["url"], request.user.id, newId])
         conn.commit()
 
     return render(request, 'core/upload.html', context) 
